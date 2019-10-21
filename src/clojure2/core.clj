@@ -29,13 +29,13 @@
   [f a b n h]
   (* h (+ (calculate-first-term f a b) (calc f a (+ a h) b h))))
 
-(defn calc-memo
-  [f a start end step]
-  (memoize (calc f a start end step)))
+(def calc-memo
+  (memoize (fn [f a start end step] (loop [x start result 0] (if (>= x end)
+                                                               result
+                                                               (recur (+ x step) (+ result (f x))))))))
 
-(defn take-integral-memo
+(def take-integral-memo
   "Memoized integral"
-  [f a b n h]
   (memoize (fn [f a b n h] (* h (+ (calculate-first-term f a b) (calc-memo f a (+ a h) b h))))))
 
 ;;(time (calc square 0. 0.2 1. 0.2))
